@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function calculate(){
+            
+            /*
+           1. 첫숫자 가져옴
+           2. 두번째숫자 가져옴
+           3. 계산
+           4. 결과를 넣음 
+            */
+
+            var num1 = document.getElementById("num1").value;
+            var num2 = document.getElementById("num2").value;
+            var inum1 = parseInt(num1);
+            var inum2 = parseInt(num2);
+            var iresult = inum1+inum2;
+
+            var result = document.getElementById("result");
+            result.style.backgroundColor = "green";
+            result.value = iresult;
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <h3>덧셈 계산기</h3>
+        <form>
+        <input type="text" id="num1" size="3"> + 
+        <input type="text" id="num2" size="3">
+        <input type="button" value="=" onclick="calculate()">
+        <input type="text" id="result" size="3">
+        <input type="reset" value="초기화">
+        </form>
+    </div>
+</body>
+</html>
