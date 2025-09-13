@@ -1,11 +1,309 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- /ai-dev-portfolio.html -->
+<!-- WHY: 단일 파일 데모 포트폴리오. 외부 자원 의존 최소화, 접근성/반응형/다크모드 지원. -->
+<!doctype html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 개발자 | 샘플 소개 페이지</title>
+  <meta name="description" content="AI 개발자 샘플 포트폴리오 페이지 (HTML+CSS 단일 파일)" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2300a2ff'/%3E%3Ctext x='32' y='40' font-size='28' text-anchor='middle' fill='white' font-family='Arial'%3EAI%3C/text%3E%3C/svg%3E" />
+  <style>
+    :root{
+      --bg: #0b1020;
+      --panel: #101931;
+      --text: #e6eaf2;
+      --muted: #9aa4b2;
+      --brand: #4f8cff;
+      --brand-2: #7a5cff;
+      --ok: #2dd4bf;
+      --danger: #ef4444;
+      --radius: 16px;
+      --shadow: 0 8px 28px rgba(0,0,0,.25);
+      --maxw: 1100px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f7f8fb; --panel:#ffffff; --text:#0e1320; --muted:#51607a; --shadow: 0 8px 28px rgba(0,0,0,.08);} /* WHY: 시스템 선호도 존중 */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:linear-gradient(180deg,var(--bg),#090c1a 60%);color:var(--text);font:400 16px/1.6 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", Arial, "Apple Color Emoji", "Segoe UI Emoji"}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:var(--maxw);margin-inline:auto;padding:24px}
+    .skip{position:absolute;left:-9999px}
+    .skip:focus{left:12px;top:12px;background:var(--panel);padding:10px 14px;border-radius:10px;outline:2px solid var(--brand)}
+
+    /* Header */
+    header{position:sticky;top:0;backdrop-filter:saturate(1.2) blur(8px);background:linear-gradient(180deg,rgba(10,15,30,.8),rgba(10,15,30,0));z-index:20}
+    nav{display:flex;gap:16px;align-items:center;justify-content:space-between;padding:14px 24px;max-width:var(--maxw);margin:0 auto}
+    .logo{display:flex;gap:10px;align-items:center}
+    .logo span{font-weight:700}
+    .nav-links{display:flex;gap:14px;flex-wrap:wrap}
+    .nav-links a{padding:8px 12px;border-radius:12px}
+    .nav-links a:hover{background:rgba(255,255,255,.06)}
+
+    /* Hero */
+    .hero{position:relative;overflow:hidden}
+    .hero-inner{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;background:linear-gradient(135deg, rgba(79,140,255,.25), rgba(122,92,255,.18));border:1px solid rgba(255,255,255,.08);padding:40px;border-radius:calc(var(--radius) + 12px);box-shadow:var(--shadow)}
+    .hero h1{font-size:clamp(28px,4vw,44px);line-height:1.15;margin:0}
+    .hero p{color:var(--muted);margin:10px 0 20px}
+    .cta{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.12);background:var(--panel);color:var(--text);padding:10px 14px;border-radius:14px;box-shadow:var(--shadow)}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));border:none}
+    .hero img{width:100%;aspect-ratio:1/1;border-radius:20px;border:1px solid rgba(255,255,255,.12);object-fit:cover}
+
+    /* Sections */
+    section{margin:56px 0}
+    section h2{font-size:clamp(22px,2.5vw,28px);margin:0 0 14px}
+    section .sub{color:var(--muted);margin:0 0 22px}
+
+    /* About */
+    .about{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px}
+    .about .card{background:var(--panel);padding:22px;border-radius:var(--radius);border:1px solid rgba(255,255,255,.08)}
+    .about ul{margin:0;padding-left:18px}
+
+    /* Skills */
+    .badges{display:flex;gap:10px;flex-wrap:wrap}
+    .badge{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:8px 12px;border-radius:999px}
+
+    /* Projects */
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{background:var(--panel);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+    .card img{width:100%;height:180px;object-fit:cover}
+    .card .body{padding:16px}
+    .card .actions{display:flex;gap:10px;margin-top:10px}
+
+    /* Code */
+    pre{background:#0d1224;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;overflow:auto}
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size:14px}
+
+    /* Links Row */
+    .links{display:flex;gap:12px;flex-wrap:wrap}
+    .link{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+
+    footer{opacity:.8;border-top:1px solid rgba(255,255,255,.08);padding:24px 0;margin-top:56px}
+
+    /* Responsive */
+    @media (max-width: 960px){
+      .hero-inner{grid-template-columns:1fr}
+      .about{grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
 </head>
 <body>
-    
+  <a class="skip" href="#main">본문 바로가기</a>
+  <header>
+    <nav aria-label="주요">
+      <div class="logo">
+        <img alt="AI 로고" width="28" height="28" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234f8cff'/%3E%3Cstop offset='1' stop-color='%237a5cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect rx='12' width='64' height='64' fill='url(%23g)'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='Arial' font-size='28' fill='white'%3EAI%3C/text%3E%3C/svg%3E" />
+        <span>AI 개발자</span>
+      </div>
+      <div class="nav-links" role="navigation">
+        <a href="#contact">과제 >> </a>
+        <a href="nostyle.html">nostyle</a>
+        <a href="style1.html">style1</a>
+        <a href="style3.html">style3</a>
+        <a href="example.html">example</a>
+      </div>
+    </nav>
+  </header>
+  
+
+  <main id="main" class="container">
+    <!-- Hero -->
+    <section class="hero" aria-label="히어로 영역">
+      <div class="hero-inner">
+        <div>
+          <h1>Wellcome to <strong>Junhyoung's</strong> Homepage. (22101044)</h1>
+          <p>LLM 애플리케이션, 검색증강(RAG), 컴퓨터비전, 그리고 경량화·배포에 관심이 많습니다.</p>
+          <div class="cta">
+            <a class="btn primary" href="mailto:dev@example.com" aria-label="이메일 보내기">📧 이메일 문의</a>
+            <a class="btn" href="#projects">🚀 프로젝트 보기</a>
+            <a class="btn" href="./resume.pdf" download>📄 이력서 다운로드</a>
+          </div>
+        </div>
+        <img alt="프로필 사진" src="https://picsum.photos/640/640?grayscale" />
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" aria-labelledby="about-title">
+      <h2 id="about-title">소개</h2>
+      <p class="sub">문제를 단순화하고, 데이터를 이해하며, 제품 임팩트로 연결합니다.</p>
+      <div class="about">
+        <div class="card">
+          <h3>핵심 포인트</h3>
+          <ul>
+            <li>대규모 언어모델 기반 서비스 설계 및 최적화</li>
+            <li>온디바이스/엣지 추론을 위한 모델 경량화</li>
+            <li>안정적인 배포 파이프라인과 모니터링 구축</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>간단 소개</h3>
+          <p>자연어처리와 시스템 프로그래밍 모두를 즐깁니다. Java로 안정적인 백엔드, C로 고성능 라이브러리를 만듭니다.</p>
+          <p>협업을 중시하며, 문서화와 테스트 자동화를 습관화했습니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills" aria-labelledby="skills-title">
+      <h2 id="skills-title">기술 스택</h2>
+      <p class="sub">주요 사용 기술 및 도구</p>
+      <div class="badges" aria-label="기술 배지">
+        <span class="badge">Java</span>
+        <span class="badge">C</span>
+        <span class="badge">Python</span>
+        <span class="badge">Spring</span>
+        <span class="badge">gRPC</span>
+        <span class="badge">CUDA</span>
+        <span class="badge">OpenCV</span>
+        <span class="badge">Docker</span>
+        <span class="badge">K8s</span>
+        <span class="badge">PostgreSQL</span>
+      </div>
+      <ul>
+        <li>AI 서비스: RAG, 벡터DB, 프롬프트 엔지니어링</li>
+        <li>성능 최적화: 멀티스레딩, SIMD, 메모리 관리</li>
+        <li>품질: 테스트 주도 개발, 코드 리뷰, 지속적 배포</li>
+      </ul>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" aria-labelledby="projects-title">
+      <h2 id="projects-title">프로젝트</h2>
+      <p class="sub">대표 작업 몇 가지</p>
+      <div class="grid">
+        <article class="card">
+          <img alt="RAG 시스템 썸네일" src="https://picsum.photos/seed/rag/800/400" />
+          <div class="body">
+            <h3>도메인 특화 RAG 검색</h3>
+            <p>도메인 지식 축적을 통한 정확도 향상 및 응답 일관성 확보.</p>
+            <div class="actions">
+              <a class="btn" href="#" aria-label="프로젝트 상세">상세</a>
+              <a class="btn" href="#" aria-label="깃허브 링크">GitHub</a>
+            </div>
+          </div>
+        </article>
+        <article class="card">
+          <img alt="경량화 썸네일" src="https://picsum.photos/seed/quant/800/400" />
+          <div class="body">
+            <h3>모델 경량화 & 온디바이스</h3>
+            <p>정밀도 혼합 및 레이턴시 45% 단축.</p>
+            <div class="actions">
+              <a class="btn" href="#">상세</a>
+              <a class="btn" href="#">GitHub</a>
+            </div>
+          </div>
+        </article>
+        <article class="card">
+          <img alt="비전 썸네일" src="https://picsum.photos/seed/vision/800/400" />
+          <div class="body">
+            <h3>실시간 비전 파이프라인</h3>
+            <p>CUDA 가속과 C 확장을 통한 초당 프레임 향상.</p>
+            <div class="actions">
+              <a class="btn" href="#">상세</a>
+              <a class="btn" href="#">GitHub</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Code Samples Java + C -->
+    <section id="code" aria-labelledby="code-title">
+      <h2 id="code-title">코드 샘플 (Java + C)</h2>
+      <p class="sub">간단한 토큰 카운터(문자열 단어 수)와 고성능 누적합 예제</p>
+
+      <h3>Java: 간단한 토큰 카운터</h3>
+      <pre><code>// File: TokenCounter.java
+// WHY: 공백/구두점 기준으로 토큰을 분리해 개수 계산 (간단 검증용)
+import java.util.*;
+import java.util.regex.*;
+
+public class TokenCounter {
+    private static final Pattern TOKEN = Pattern.compile("[\가-\힯\w]+", Pattern.UNICODE_CHARACTER_CLASS);
+
+    public static int countTokens(String text) {
+        if (text == null || text.isEmpty()) return 0;
+        Matcher m = TOKEN.matcher(text);
+        int c = 0; while (m.find()) c++;
+        return c;
+    }
+
+    public static void main(String[] args) {
+        String s = String.join(" ", Arrays.asList(args));
+        System.out.println(countTokens(s));
+    }
+}
+</code></pre>
+
+      <h3>C: 누적합(prefix sum) - 대용량 처리용</h3>
+      <pre><code>// File: prefix_sum.c
+// WHY: 메모리 접근 패턴 단순화로 캐시 효율 개선
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int prefix_sum(const int *in, int *out, size_t n) {
+    if (!in || !out) return -1; // WHY: 안전성
+    long long acc = 0;          // WHY: 오버플로 완화(입력 범위 넉넉히)
+    for (size_t i = 0; i &lt; n; ++i) {
+        acc += in[i];
+        out[i] = (int)acc;
+    }
+    return 0;
+}
+
+int main(void){
+    int n; if (scanf("%d", &n) != 1) return 1;
+    int *a = malloc(sizeof(int)*n);
+    int *b = malloc(sizeof(int)*n);
+    for (int i=0;i&lt;n;i++) scanf("%d", &a[i]);
+    prefix_sum(a,b,n);
+    for (int i=0;i&lt;n;i++) printf("%d%c", b[i], i+1==n?'\n':' ');
+    free(a); free(b);
+    return 0;
+}
+</code></pre>
+
+      <details>
+        <summary>빌드/실행 가이드</summary>
+        <ul>
+          <li><strong>Java</strong>: <code>javac TokenCounter.java && java TokenCounter "안녕 세상!"</code></li>
+          <li><strong>C</strong>: <code>gcc -O2 prefix_sum.c -o psum && echo "5 1 2 3 4 5" | ./psum</code></li>
+        </ul>
+      </details>
+    </section>
+
+    <!-- Highlights as ordered list -->
+    <section aria-labelledby="wins-title">
+      <h2 id="wins-title">경력 하이라이트</h2>
+      <ol>
+        <li>추론 지연 45% 감소 및 비용 30% 절감</li>
+        <li>검색 일치율 12%p 향상 (A/B 테스트 4주)</li>
+        <li>릴리즈 실패율 0.5% 미만 유지</li>
+      </ol>
+    </section>
+
+    <!-- Links -->
+    <section id="contact" aria-labelledby="links-title">
+      <h2 id="links-title">링크 모음</h2>
+      <div class="links">
+        <a class="link" href="https://github.com/your-id" target="_blank" rel="noopener">🐙 GitHub</a>
+        <a class="link" href="https://www.linkedin.com/in/your-id" target="_blank" rel="noopener">💼 LinkedIn</a>
+        <a class="link" href="https://blog.example.com" target="_blank" rel="noopener">✍️ 기술 블로그</a>
+        <a class="link" href="mailto:dev@example.com">📧 dev@example.com</a>
+      </div>
+    </section>
+
+    <footer class="container" aria-label="푸터">
+      <small>© 2025 Your Name. 모든 권리 보유.</small>
+      · <a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">맨 위로</a>
+    </footer>
+  </main>
 </body>
 </html>

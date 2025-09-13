@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Form 연습</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,14 +36,15 @@
             border: 1px solid #ccc;
         }
 
+
         textarea,
         select {
             width: 97%;
             border-radius: 5px;
         }
 
-        input[type=radio] {
-            background-color: #82276a;
+        .radio input[type=radio] {
+            background-color: #407daf;
         }
 
         input[type=checkbox]+label,
@@ -51,6 +53,40 @@
             width: auto;
             margin-right: 5px;
 
+        }
+
+        .radio input[type="radio"] {
+            display: none;
+        }
+
+        .radio label {
+            position: relative;
+            padding-left: 25px;
+            cursor: pointer;
+        }
+
+        .radio label::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 9px;
+            height: 9px;
+            border: 2px solid #999;
+            border-radius: 50%;
+            background: #fff;
+            transition: all 0.3s;
+        }
+
+        /* hover (선택 안 된 상태만) */
+        .radio input[type="radio"]:not(:checked)+label:hover::before {
+            background: rgb(44, 173, 93);
+        }
+
+        /* checked 상태 */
+        .radio input[type="radio"]:checked+label::before {
+            background: #2196f3;
+            border-color: #43494e;
         }
 
         button {
@@ -83,11 +119,12 @@
 
         <!-- 3. 라디오 버튼 -->
         <label>성별:</label>
-
-        <input type="radio" id="male" name="gender" value="male">
-        <label for="male">남성</label>
-        <input type="radio" id="female" name="gender" value="female">
-        <label for="female">여성</label>
+        <div class="radio">
+            <input type="radio" id="male" name="gender" value="male">
+            <label for="male">남성</label>
+            <input type="radio" id="female" name="gender" value="female">
+            <label for="female">여성</label>
+        </div>
 
         <!-- 4. 체크박스 -->
 
